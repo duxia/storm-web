@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />  
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+		<title>
+			前信大数据地图平台
+		</title>
+
+		<!-- icon -->
+		<link rel="shortcut icon" type="image/png" href="/assets/images/favicon.png">
+
+		<!-- bootstrap -->
+		<link href="/assets/stylesheets/bootstrap.min.css" rel="stylesheet">
+		
+		<!-- typeahead plugin -->
+		<link href="/assets/stylesheets/typeahead.css" rel="stylesheet">
+		
+		<!-- datetimepicker -->
+		<link href="/assets/stylesheets/bootstrap-datetimepicker.min.css" rel="stylesheet">
+		
+		<!-- loading indicators plugin -->
+		<link href="/assets/stylesheets/ladda-themeless.min.css" rel="stylesheet">
+		
+		<!-- baidu地图 -->
+		<style type="text/css">  
+		html{height:100%}  
+		body{height:100%;margin:0px;padding:0px}  
+		#mapcontainer{height:100%}  
+		</style>
+	</head>
+	<body>
+		<!-- 标题栏 -->
+		<nav class="navbar navbar-inverse navbar-static-top">
+			<style>
+				.body{padding-top:70px}
+			</style>
+			<div class="container">
+				<div class="navbar-header">
+					<span style="color: #FFF; font-size: 24px; font-family: '微软雅黑', '幼圆';"><img src="/img/logo-white.png" width="60" height="50"/> 前信车辆实时处理系统</span>
+				</div>
+			</div>
+		</nav>
+		
+		<!-- 左边栏 -->
+		<div class="col-md-3">
+			<!-- 实时查询 -->
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					<h4 class="panel-title">实时查询</h4>
+				</div>
+				<div class="panel-body">
+					<form class="form-group" onsubmit="return carSearchOnline(this);">
+      					<label for="car_id">车辆实时查询</label>
+      					<div class="input-group">
+			               <input type="text" class="form-control" id="car_id" name="car_id" placeholder="请输入车牌号">
+			               <span class="input-group-btn">
+			                  <button class="btn btn-default" type="submit">查询</button>
+			               </span>
+			            </div>	
+   					</form>
+   					<!-- 检查websocket信息锚点 -->
+   					<div>
+      					<a name="OLSearchToggle" id="OLSearchToggle"></a>
+      				</div>
+      				<label>车况聚类实时分析</label>
+      				<div class="input-group" style="width:100%">
+      					<button class="btn btn-success btn-block" type="button" onclick=carClusterOnline(this)>开启实时分析</button>
+      				</div>
+      				<div>
+      					<a name="ClusterInfoToggle" id="ClusterInfoToggle"></a>
+      				</div>
+				</div>
+			</div><!-- \实时查询 -->
+			<!-- 历史查询 -->
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					<h4 class="panel-title">历史查询</h4>
+				</div>
+				<div class="panel-body">
+					<label>车辆历史轨迹回放</label>
+					<form class="form-horizontal" role="form" method="post" onsubmit="return submitHistoryRoute(this);">
+						<div class="form-group">
+							<div class="col-md-3">
+								<label for="offline-carid" class="control-label">查询车辆：</label>
+							</div>
+							<div class="col-md-9">
+								<input type="text" class="form-control" id="offline-carid" name="offline-carid" placeholder="请选择查询车辆">
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-md-3">
+								<label for="starttime" class="control-label">起始时间：</label>
+							</div>
+							<div class="col-md-9">
+								<div class="input-group date form_datetime">
+									<input type="text" class="form-control" id="starttime" name="starttime" placeholder="请选择起始时间">
+									<span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+									<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-md-3">
+								<label for="endtime" class="control-label">结束时间：</label>
+							</div>
+							<div class="col-md-9">
+								<div class="input-group date form_datetime">
+									<input type="text" class="form-control" id="endtime" name="endtime" placeholder="请选择结束时间">
+									<span class="input-group-addon"><span class="glyphicon glyphicon-remove"></span></span>
+									<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+								</div>
+							</div>
+						</div><!-- \form-group -->
+						<button Id="submitHistoryRouteBtn" type="submit" class="btn btn-success ladda-button" data-style="zoom-out" style="float:right"><span class="ladda-label">查询</span></button>
+					</form>
+				</div>
+			</div><!-- \历史查询 -->
+		</div><!-- \左边栏 -->
+		<!-- 右边栏 -->
+		<div class="col-md-9" style="height:100%;">
+			<!-- 地图框 -->
+			<div class="panel panel-primary" style="height:100%;">
+				<div class="panel-heading" style="text-align:center;">
+					<h4 class="panel-title">地图</h4>
+				</div>
+				<div class="panel-body" style="height:100%;margin:0px;padding:0px;padding-bottom: 38px;">
+					<div id="mapcontainer"></div>
+				</div>
+			</div><!-- \地图框 -->
+		</div><!-- \右边栏 -->
+		
+		<!-- scripts -->
+		<!-- jquery -->
+		<script type="text/javascript" src="/assets/javascripts/jquery.min.js"></script>
+		<!-- bootstrap -->
+		<script type="text/javascript" src="/assets/javascripts/bootstrap.min.js"></script>
+		<!-- typeahead plugin -->
+		<script type="text/javascript" src="/assets/javascripts/typeahead.bundle.min.js"></script>
+		<!-- datetimepicker -->
+		<script type="text/javascript" src="/assets/javascripts/bootstrap-datetimepicker.min.js"></script>
+		<script type="text/javascript" src="/assets/javascripts/bootstrap-datetimepicker.zh-CN.js"></script>
+		<!-- loading indicators plugin -->
+		<script type="text/javascript" src="/assets/javascripts/spin.min.js"></script>
+		<script type="text/javascript" src="/assets/javascripts/ladda.min.js"></script>
+		<!-- baidu地图 -->
+		<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=mbSEsBlDzN2GsxxCPWYKe6HQ"></script>
+		<script type="text/javascript" src="http://developer.baidu.com/map/jsdemo/demo/convertor.js"></script>
+		<script type="text/javascript" src="http://developer.baidu.com/map/jsdemo/demo/changeMore.js"></script>
+		<script type="text/javascript" src="http://api.map.baidu.com/library/Heatmap/2.0/src/Heatmap_min.js"></script>
+		<script type="text/javascript" src="http://api.map.baidu.com/library/LuShu/1.2/src/LuShu_min.js"></script>
+		<!-- myjs -->
+		<script type="text/javascript" src="/assets/javascripts/myscript.js"></script>
+		<script type="text/javascript" src="/assets/javascripts/mapscript.js"></script>
+	</body>
+</html>

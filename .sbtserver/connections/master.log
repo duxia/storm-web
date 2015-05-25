@@ -1,0 +1,19 @@
+New log file opened at Mon May 11 14:28:11 GMT+08:00 2015 by 2104@MS-004
+Taking next connection to: 3404
+New client attempting to connect on port: 3405-3404
+  Address = /192.168.100.15:3404
+This client on port 3405 has uuid 949033f6-6f25-4123-affd-69156529c65c configName play-fork-run humanReadableName Play Fork Run protocolVersion 1 featureTags Vector()
+Connected Clients: play-fork-run-949033f6-6f25-4123-affd-69156529c65c
+Taking next connection to: 3404
+Checking to see if clients are empty...
+We have 1 non-daemon clients, continuing serving connections.
+Taking next connection to: 3404
+Checking to see if clients are empty...
+We have 1 non-daemon clients, continuing serving connections.
+Taking next connection to: 3404
+Checking to see if clients are empty...
+No non-daemon clients connected after 3 min. Shutting down.
+Server socket thread exiting.
+0 clients open, will close them...
+All client sockets have been closed.
+Closing the 2104@MS-004 logs at Mon May 11 14:37:12 GMT+08:00 2015, goodbye.

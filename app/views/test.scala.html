@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+
+<title>Ladda for Bootstrap 3 UI</title>
+
+<meta name="description" content="Bootstrap 3 loading state for buttons">
+<meta name="author" content="Maks Surguy">
+
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<link href="/assets/stylesheets/bootstrap.min.css" rel="stylesheet">
+<link href="/assets/stylesheets/typeahead.css" rel="stylesheet">
+
+<link href="/assets/stylesheets/ladda-themeless.min.css" rel="stylesheet">
+
+</head>
+<body>
+	<div class="container">
+		<div class="row">
+			<div class="col-md-6 col-md-offset-3 text-center">
+				<p>
+					<button class="btn btn-primary ladda-button" data-style="expand-left"><span class="ladda-label">expand-left</span></button>
+
+					<button class="btn btn-primary ladda-button" data-style="expand-right"><span class="ladda-label">expand-right</span></button>
+
+					<button class="btn btn-primary ladda-button" data-style="expand-up"><span class="ladda-label">expand-up</span></button>
+
+					<button class="btn btn-primary ladda-button" data-style="expand-down"><span class="ladda-label">expand-down</span></button>
+				</p>
+			</div>
+		</div>
+	</div>
+<button class="btn btn-info ladda-button" data-style="zoom-out" onclick="getCarId()"><span class="ladda-label">zoom-out</span></button>
+<input class="typeahead" type="text" placeholder="Countries">
+
+		
+		<!-- loading indicators plugin -->
+		<script src="/assets/javascripts/spin.min.js"></script>
+		<script src="/assets/javascripts/ladda.min.js"></script>	
+		<script type="text/javascript" src="/assets/javascripts/jquery.min.js"></script>
+		<script type="text/javascript" src="/assets/javascripts/typeahead.bundle.min.js"></script>
+		<script>
+		var countries = new Bloodhound({
+		    datumTokenizer: Bloodhound.tokenizers.whitespace,
+		    queryTokenizer: Bloodhound.tokenizers.whitespace,
+		    prefetch: '/caridPrefetch'
+		});
+		console.log(countries);
+		 $('.typeahead').typeahead(null, {
+		    name: 'countries',
+		    limit: 100,
+		    source: countries
+		  });
+		  
+			function getCarId()	{
+				$.get("/caridPrefetch",function(data){
+					console.log(data);
+				});
+			}
+			// Bind normal buttons
+			Ladda.bind( 'div:not(.progress-demo) button', { timeout: 2000 } );
+
+			// Bind progress buttons and simulate loading progress
+			Ladda.bind( '.progress-demo button', {
+				callback: function( instance ) {
+					var progress = 0;
+					var interval = setInterval( function() {
+						progress = Math.min( progress + Math.random() * 0.1, 1 );
+						instance.setProgress( progress );
+
+						if( progress === 1 ) {
+							instance.stop();
+							clearInterval( interval );
+						}
+					}, 200 );
+				}
+			} );
+
+		</script>
+		
+		
+</body>
+</html>
