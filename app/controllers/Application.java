@@ -78,7 +78,7 @@ public class Application extends Controller {
 		String startTime = requestDat.get("starttime");
 		String endTime = requestDat.get("endtime");
 		Connection connection = JdbcConnection.getConnection();
-		String sql = "select * from CarGPSLog where VehicleSimID="+carId+" and GPSTime between \""+startTime+"\" and \""+endTime+"\"";
+		String sql = "select * from VehicleData20100901 where VehicleSimID="+carId+" and GPSTime between \""+startTime+"\" and \""+endTime+"\" order by ID";
 		System.out.println(sql);
 		try {
 			PreparedStatement preparedStatement = connection.prepareStatement(sql);
@@ -99,7 +99,6 @@ public class Application extends Controller {
 			System.out.println(Json.toJson(resultMessages));
 			return ok(Json.toJson(resultMessages));
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return ok();
@@ -114,18 +113,4 @@ public class Application extends Controller {
 		return ok(test.render());
 	}
     
-    // Websocket interface
-    public static WebSocket<String> wsInterface(){
-        return new WebSocket<String>(){
-            
-            // called when websocket handshake is done
-            public void onReady(WebSocket.In<String> in, WebSocket.Out<String> out){
-                SimpleChat.start(in, out);
-            }
-        };   
-    }   
-    // get the ws.js script
-    public static Result wsJs() {
-        return ok(views.js.ws.render());
-    }
 }

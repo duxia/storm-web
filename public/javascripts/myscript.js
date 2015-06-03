@@ -67,8 +67,8 @@ function carSearchOnline(form) {
 	        		if(!(SocketCreated && (ws.readyState == 0 || ws.readyState == 1))) {
 	        			//建立websocket连接
 	        			try {
-	        				ws = new WebSocket("ws://localhost:9000/carLocWebSocket");
-	//        				console.log("current carid: "+carid);
+	        				ws = new WebSocket("ws://192.168.100.159:9000/carLocWebSocket");
+	        				//console.log("current carid: "+carid);
 	        				ws.onopen = function(event) {
 	        					WSonOpen(carid)
 	        				};
@@ -85,7 +85,7 @@ function carSearchOnline(form) {
 						} catch (e) {
 							try {
 								//兼容火狐
-								ws = new MozWebSocket("ws://localhost:9000/carLocWebSocket");
+								ws = new MozWebSocket("ws://192.168.100.159:9000/carLocWebSocket");
 								ws.onopen = function(event) {
 		        					WSonOpen(carid)
 		        				};
@@ -130,7 +130,7 @@ function WSonMessage(event) {
 	var message = jQuery.parseJSON(event.data);
 	map.clearOverlays();
 	var point = new BMap.Point(message.GPSLongitude,message.GPSLatitude);
-	BMap.Convertor.translate(point,0,function (point){//百度地图坐标转换回调函数
+	BMap.ConvertorOne.translate(point,0,function (point){//百度地图坐标转换回调函数
 		var marker = new BMap.Marker(point,{
 			icon:new BMap.Symbol(BMap_Symbol_SHAPE_FORWARD_CLOSED_ARROW, {
 			    scale: 3,
@@ -145,6 +145,7 @@ function WSonMessage(event) {
 		label.setStyle({maxWidth:"none"}) ;
 		marker.setLabel(label); //添加label
 		map.setCenter(point);
+		map.setZoom(15);
 	});
 	//更新时间
 	$("#CarLocWsSuccess").children("p").slideToggle(function (){
@@ -167,6 +168,7 @@ function WSonError() {
 function closeWS() {
 	ws.close();
 	map.clearOverlays();
+	map.reset();
 	$("#CarLocWsSuccess").fadeOut(function (){
 		$(this).remove();
 	});
@@ -178,7 +180,7 @@ function carClusterOnline(btn) {
 	if(!(SocketCreated && (ws.readyState == 0 || ws.readyState == 1))) {
 		//建立websocket连接
 		try {
-			ws = new WebSocket("ws://localhost:9000/carClusterWebSocket");
+			ws = new WebSocket("ws://192.168.100.159:9000/carClusterWebSocket");
 //			console.log("current carid: "+carid);
 			ws.onopen = function(event) {
 				WSClusteronOpen(btn)
@@ -196,7 +198,7 @@ function carClusterOnline(btn) {
 		} catch (e) {
 			try {
 				//兼容火狐
-				ws = new MozWebSocket("ws://localhost:9000/carClusterWebSocket");
+				ws = new MozWebSocket("ws://192.168.100.159:9000/carClusterWebSocket");
 				ws.onopen = function(event) {
 					WSClusteronOpen(carid)
 				};
@@ -225,6 +227,7 @@ function closeClusterWS(btn) {
 	$(btn).remove();
 	parent.append('<button class="btn btn-success btn-block" onclick="carClusterOnline(this)">开启实时分析</button>');
 	map.clearOverlays();
+	map.reset();
 	$("#ClusterWsSuccess").fadeOut(function(){
 		$(this).remove();
 	})
@@ -319,7 +322,7 @@ function submitHistoryRoute(form) {
 }
 //调用百度路书功能
 function baiduLushu(data) {
-	console.log(data.points[0]);
+//	console.log(data.points[0]);
 	var length = data.points.length;
 	var arrPois = new Array();
 	for(i=0;i<length;i++) {
@@ -383,6 +386,7 @@ function callback(points) {
 //"清除"按钮响应
 function removeHistoryRouteSuccess(){
 	map.clearOverlays();
+	map.reset();
 	$("#HistoryRouteSuccess").fadeOut(function(){
 		var form = $(this).prev();
 		form.append('<button Id="submitHistoryRouteBtn" type="submit" class="btn btn-success ladda-button" data-style="zoom-out" style="float:right;display:none"><span class="ladda-label">查询</span></button>');

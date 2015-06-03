@@ -3,22 +3,14 @@
 # ~~~~
 
 # Home page
-# GET     /                             controllers.Application.index()
-GET     /assets.javascript.ws.js        controllers.Application.wsJs()
-GET     /wsInterface                    controllers.Application.wsInterface()
 GET		/home							controllers.Application.home()
 POST	/carIdCheck						controllers.Application.carIdCheck()
 GET		/carLocWebSocket				controllers.Application.carLocWebSocket()
 GET		/carClusterWebSocket			controllers.Application.carClusterWebSocket()
 POST	/historyRouteSearch				controllers.Application.historyRouteSearch()
 GET		/caridPrefetch					controllers.Application.caridPrefetch()
-
-GET		/testladda						controllers.Application.testladda()
 GET		/baidumap						controllers.Application.baidumap()
 
-GET		/test							controllers.Ws.test()
-GET		/websocket						controllers.Ws.websocket()
-GET		/socket							controllers.Ws.socket()
 
 # -----------public-------------------
 # Map static resources from the /public folder to the /assets URL path
